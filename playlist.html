@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>video playlist</title>
+
+   <!-- font awesome cdn link  -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+
+   <!-- custom css file link  -->
+   <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<header class="header">
+   
+   <section class="flex">
+
+      <a href="index.html" class="logo">MathMastery</a>
+
+      <form action="search.html" method="post" class="search-form">
+         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
+         <button type="submit" class="fas fa-search"></button>
+      </form>
+
+      <div class="icons">
+         <div id="menu-btn" class="fas fa-bars"></div>
+         <div id="search-btn" class="fas fa-search"></div>
+         <div id="user-btn" class="fas fa-user"></div>
+         <div id="toggle-btn" class="fas fa-sun"></div>
+      </div>
+
+      <div class="profile">
+         <img src="images/pic-1.jpg" class="image" alt="">
+         <h3 class="name">Student 1</h3>
+         <p class="role">studen</p>
+         <a href="profile.html" class="btn">view profile</a>
+         <div class="flex-btn">
+            <a href="login.html" class="option-btn">login</a>
+            <a href="register.html" class="option-btn">register</a>
+         </div>
+      </div>
+
+   </section>
+
+</header>   
+
+<div class="side-bar">
+
+   <div id="close-btn">
+      <i class="fas fa-times"></i>
+   </div>
+
+   <div class="profile">
+      <img src="images/pic-1.jpg" class="image" alt="">
+      <h3 class="name">Student 1</h3>
+      <p class="role">studen</p>
+      <a href="profile.html" class="btn">view profile</a>
+   </div>
+
+   <nav class="navbar">
+      <a href="index.html"><i class="fas fa-home"></i><span>home</span></a>
+      <a href="about.html"><i class="fas fa-question"></i><span>about</span></a>
+      <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>courses</span></a>
+      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></a>
+      <a href="contact.html"><i class="fas fa-headset"></i><span>contact us</span></a>
+   </nav>
+
+</div>
+
+<section class="playlist-details" id="playlist-details-container">
+   <!-- dynamically loaded course details -->
+</section>
+
+<section class="playlist-videos">
+   <h1 class="heading">playlist videos</h1>
+   
+   <div id="add-video-container" style="display: none; margin-bottom: 2rem;">
+      <form id="add-video-form" style="background-color: var(--white); padding: 2rem; border-radius: .5rem;">
+         <h3 style="font-size: 2rem; color: var(--black); padding-bottom: 1rem; text-transform: capitalize;">Add New Video</h3>
+         <p style="font-size: 1.5rem; color: var(--light-color);">Video Title <span style="color: var(--red);">*</span></p>
+         <input type="text" name="video_title" required class="box" style="width: 100%; border-radius: .5rem; padding: 1.2rem 1.4rem; font-size: 1.8rem; color: var(--black); margin: 1rem 0; background-color: var(--light-bg);">
+         <p style="font-size: 1.5rem; color: var(--light-color);">Video Thumbnail <span style="color: var(--red);">*</span></p>
+         <input type="text" name="video_thumb" value="images/post-1-1.png" required class="box" style="width: 100%; border-radius: .5rem; padding: 1.2rem 1.4rem; font-size: 1.8rem; color: var(--black); margin: 1rem 0; background-color: var(--light-bg);">
+         <p style="font-size: 1.5rem; color: var(--light-color);">Video File URL <span style="color: var(--red);">*</span></p>
+         <input type="text" name="video_url" value="images/vid-1.mp4" required class="box" style="width: 100%; border-radius: .5rem; padding: 1.2rem 1.4rem; font-size: 1.8rem; color: var(--black); margin: 1rem 0; background-color: var(--light-bg);">
+         <input type="submit" value="add video" class="btn">
+      </form>
+   </div>
+
+   <div class="box-container" id="playlist-videos-container">
+      <!-- dynamically loaded videos -->
+   </div>
+</section>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<footer class="footer">
+
+      &copy; Mr:Ezz EL-Din  <span>+201125400389</span> 
+
+
+</footer>
+
+<!-- custom js file link  -->
+<script src="js/store.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('id');
+    const courses = getCourses();
+    const course = courses.find(c => c.id === courseId);
+    
+    if (!course) {
+        document.getElementById('playlist-details-container').innerHTML = '<h1 class="heading">Course not found</h1>';
+        return;
+    }
+
+    const isOwner = currentUser && currentUser.role === 'admin';
+
+    // Render course details
+    document.getElementById('playlist-details-container').innerHTML = `
+        <h1 class="heading">course details</h1>
+        <div class="row">
+           <div class="column">
+              <div class="thumb">
+                 <img src="${course.thumbnail}" alt="">
+                 <span>${course.videos ? course.videos.length : 0} videos</span>
+              </div>
+           </div>
+           <div class="column">
+              <div class="tutor">
+                 <img src="images/pic-2.jpg" alt="">
+                 <div>
+                    <h3>${course.teacherName}</h3>
+                    <span>Tutor</span>
+                 </div>
+              </div>
+              <div class="details">
+                 <h3>${course.title}</h3>
+                 <p>This is a dynamically created course by ${course.teacherName}.</p>
+                 <a href="teacher_profile.html" class="inline-btn">view profile</a>
+              </div>
+           </div>
+        </div>
+    `;
+
+    // Render videos
+    function renderVideos() {
+        const vp = document.getElementById('playlist-videos-container');
+        if (!course.videos || course.videos.length === 0) {
+            vp.innerHTML = '<p class="empty" style="font-size: 2rem;">No videos uploaded yet.</p>';
+        } else {
+            vp.innerHTML = course.videos.map(v => `
+                <a class="box" href="watch-video.html?courseId=${course.id}&videoId=${v.id}">
+                   <i class="fas fa-play"></i>
+                   <img src="${v.thumbnail}" alt="">
+                   <h3>${v.title}</h3>
+                </a>
+            `).join('');
+        }
+    }
+    renderVideos();
+
+    // Show add video form if owner
+    if (isOwner) {
+        document.getElementById('add-video-container').style.display = 'block';
+        document.getElementById('add-video-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = this.querySelector('input[name="video_title"]').value;
+            const thumbnail = this.querySelector('input[name="video_thumb"]').value;
+            const url = this.querySelector('input[name="video_url"]').value;
+            
+            const newVideo = {
+                id: generateId(),
+                title,
+                thumbnail,
+                url
+            };
+            
+            if(!course.videos) course.videos = [];
+            course.videos.push(newVideo);
+            
+            // save back to store
+            const cIndex = courses.findIndex(c => c.id === course.id);
+            courses[cIndex] = course;
+            saveCourses(courses);
+            
+            alert('Video added successfully!');
+            this.querySelector('input[name="video_title"]').value = '';
+            
+            renderVideos();
+            
+            // update video count text
+            document.querySelector('.playlist-details .thumb span').textContent = course.videos.length + ' videos';
+        });
+    }
+});
+</script>
+
+   
+</body>
+</html>
